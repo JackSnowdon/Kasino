@@ -39,3 +39,20 @@
     color: #1D1115;
     margin: 8px 2px;
 }
+
+
+/* Queryset Display Styles */
+
+.q-list a {
+    color: black;
+    font-size: 20px;
+    transition: all 0.35s ease-in-out;
+    -moz-transition: all 0.35s ease-in-out;
+    -webkit-transition: all 0.35s ease-in-out;
+    -o-transition: all 0.35s ease-in-out;
+}
+
+.q-list a:hover {
+    color: #0189d8;
+    text-decoration: none;
+}

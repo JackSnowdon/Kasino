@@ -29,3 +29,38 @@ def create_deck(request):
         deck_form = DeckForm()
     return render(request, "create_deck.html", {"deck_form": deck_form})
 
+
+@login_required
+def view_deck(request, pk):
+    deck = get_object_or_404(CardDeck, pk=pk)
+    return render(request, "view_deck.html", {"deck": deck})
+
+
+@login_required
+def rename_deck(request, pk):
+    deck = get_object_or_404(CardDeck, pk=pk)
+    if request.method == "POST":
+        deck_form = DeckForm(request.POST, instance=deck)
+        if deck_form.is_valid():
+            form = deck_form.save(commit=False)
+            form.save()
+            messages.error(request, "Renamed {0}".format(form.name), extra_tags="alert")
+            return redirect("view_deck", deck.pk)    
+    else:
+        deck_form = DeckForm(instance=deck)
+    return render(request, "rename_deck.html", {"deck_form": deck_form, "deck": deck})
+
+
+@login_required
+def delete_deck(request, pk):
+    deck = get_object_or_404(CardDeck, pk=pk)
+    if deck.created_by == request.user.profile:
+        deck.delete()
+        messages.error(
+            request, f"Deleted {deck}", extra_tags="alert"
+        )
+        return redirect(reverse("card_index"))
+    else:
+        messages.error(request, f"Avatar Not Yours To Delete", extra_tags="alert")
+        return redirect("card_index")
+    

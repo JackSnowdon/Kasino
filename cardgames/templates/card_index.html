@@ -14,7 +14,7 @@
             <a href="{% url 'create_deck' %}" role="button" class="btn btn-success" aria-disabled="false">Create Deck</a>
             <ul class="mt-3">
                 {% for d in decks %}
-                <li>{{ d.name }}</li>
+                <li class="q-list"><a href="{% url 'view_deck' d.pk %}">{{ d.name }}</a></li>
                 {% endfor %}
             </ul>
         </div>
