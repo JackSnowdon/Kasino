@@ -3,7 +3,7 @@
 <section class="button-nav">
     <div class="row mb-5">
         <div class="col-12">
-            <a href="{% url 'card_index' %}" role="button" class="btn btn-warning" aria-disabled="false">Back</a>
+            <a href="{% url 'view_deck' deck.pk %}" role="button" class="btn btn-warning" aria-disabled="false">{{ deck }}</a>
         </div>
     </div>
 </section>

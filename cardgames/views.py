@@ -75,9 +75,28 @@ def create_card(request, pk):
         if card_form.is_valid():
             form = card_form.save(commit=False)
             form.deck = deck
+            form.name = return_card_name(form)
             form.save()
             messages.error(request, f"Added {form} To {deck}", extra_tags="alert")
             return redirect("view_deck", deck.pk)    
     else:
         card_form = CardForm()
     return render(request, "create_card.html", {"card_form": card_form, "deck": deck})
+
+
+def return_card_name(card):
+    values = {0: "Joker", 1: "Ace", 2: "Two", 3: "Three", 4: "Four", 5: "Five", 
+            6: "Six", 7: "Seven", 8: "Eight", 9: "Nine", 10: "Ten", 
+            11: "Jack", 12: "Queen", 13: "King"}
+    return values[card.value]
+
+
+@login_required
+def delete_card(request, pk):
+    card = get_object_or_404(Card, pk=pk)
+    deck = card.deck
+    card.delete()
+    messages.error(
+        request, f"Deleted {card}", extra_tags="alert"
+    )
+    return redirect("view_deck", deck.pk)       
