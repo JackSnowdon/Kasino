@@ -99,4 +99,34 @@ def delete_card(request, pk):
     messages.error(
         request, f"Deleted {card}", extra_tags="alert"
     )
-    return redirect("view_deck", deck.pk)       
+    return redirect("view_deck", deck.pk)
+
+
+@login_required
+def delete_all_cards(request, pk):
+    deck = get_object_or_404(CardDeck, pk=pk)
+    deck.cards.all().delete()
+    messages.error(
+        request, f"Deleted All Cards From {deck}", extra_tags="alert"
+    )
+    return redirect("view_deck", deck.pk)
+
+
+@login_required
+def create_standard_52(request, pk):
+    deck = get_object_or_404(CardDeck, pk=pk)
+    suits = ['Clubs', 'Spades', 'Hearts', 'Diamonds']
+    values = {1: "Ace", 2: "Two", 3: "Three", 4: "Four", 5: "Five", 
+            6: "Six", 7: "Seven", 8: "Eight", 9: "Nine", 10: "Ten", 
+            11: "Jack", 12: "Queen", 13: "King"}
+    for s in suits:
+        for value, name in values.items():
+            card_form = CardForm()
+            form = card_form.save(commit=False)
+            form.deck = deck
+            form.suit = s
+            form.name = name
+            form.value = value
+            form.save()
+    return redirect("view_deck", deck.pk)
+
