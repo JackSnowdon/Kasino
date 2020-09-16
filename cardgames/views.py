@@ -13,7 +13,7 @@ def card_index(request):
     return render(request, "card_index.html", {"decks": decks})
 
 
-# Card deck
+# Card Deck
 
 @login_required
 def create_deck(request):
@@ -64,3 +64,20 @@ def delete_deck(request, pk):
         messages.error(request, f"Avatar Not Yours To Delete", extra_tags="alert")
         return redirect("card_index")
     
+# Card
+
+
+@login_required
+def create_card(request, pk):
+    deck = get_object_or_404(CardDeck, pk=pk)
+    if request.method == "POST":
+        card_form = CardForm(request.POST)
+        if card_form.is_valid():
+            form = card_form.save(commit=False)
+            form.deck = deck
+            form.save()
+            messages.error(request, f"Added {form} To {deck}", extra_tags="alert")
+            return redirect("view_deck", deck.pk)    
+    else:
+        card_form = CardForm()
+    return render(request, "create_card.html", {"card_form": card_form, "deck": deck})
